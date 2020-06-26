@@ -23,22 +23,40 @@
  */
 
 var field = {
-  init: function (doc) {
-    doc.addEventListener(
-      'keydown',
-      function (evt) {
-        if (evt.keyCode === 37) {
-          field.move_laser(doc, -15);
+    init: function (doc) {
+        doc.addEventListener(
+            'keydown',
+            function (evt) {
+                if (evt.keyCode === 37) {
+                    field.move_laser(doc, -15);
+                }
+                if (evt.keyCode === 39) {
+                    field.move_laser(doc, +15);
+                }
+            }
+        );
+    },
+    move_laser: function (doc, dx) {
+        let div = doc.getElementById('laser');
+        let parentRect = div.parentNode.getBoundingClientRect();
+        let laserRect = div.getBoundingClientRect();
+
+        if (dx > 0) {
+            let rightBorder = parentRect.right;
+            let predictedRightValue = laserRect.right + dx;
+            if (predictedRightValue > rightBorder) {
+                div.style.right = rightBorder + 'px'; // TODO (@pochka15): this doesn't work!?
+            } else {
+                div.style.left = laserRect.left + dx + 'px';
+            }
+        } else if (dx < 0) {
+            let leftBorder = parentRect.left;
+            let predictedLeftValue = laserRect.left + dx;
+            if (predictedLeftValue < leftBorder) {
+                div.style.left = leftBorder + 'px';
+            } else {
+                div.style.left = laserRect.left + dx + 'px';
+            }
         }
-        if (evt.keyCode === 39) {
-          field.move_laser(doc, +15);
-        }
-      }
-    );
-  },
-  move_laser: function (doc, dx) {
-    var div = doc.getElementById('laser');
-    var rect = div.getBoundingClientRect();
-    div.style.left = rect.left + dx + 'px';
-  }
+    }
 };
